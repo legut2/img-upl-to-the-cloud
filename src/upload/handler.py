@@ -1,6 +1,7 @@
 import json
 import base64
 import hashlib
+import os
 
 def handler(event, context):
     # Log the event argument for debugging and for use in local development.
