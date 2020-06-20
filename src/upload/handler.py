@@ -12,7 +12,7 @@ def handler(event, context):
             m = hashlib.md5()
             m.update(img_data)
 
-            with open(m.hexdigest() + ".jpeg", "wb") as fh:
+            with open("/tmp/" + m.hexdigest() + ".jpeg", "wb") as fh:
                 fh.write(base64.decodebytes(img_data))
             
 
