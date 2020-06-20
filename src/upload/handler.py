@@ -14,7 +14,7 @@ def handler(event, context):
             img_data = event['body'].encode()
             m = hashlib.md5()
             m.update(img_data)
-            imageName = m.hexdigest() + ".jpeg"
+            imageName = m.hexdigest() + ".jpg"
             imagePath = "/tmp/" + imageName
             with open(imagePath, "wb") as fh:
                 fh.write(base64.decodebytes(img_data))
