@@ -23,15 +23,6 @@ Resources:
           /downloadImage:
             get:
               responses: {}
-          /deleteImage:
-            delete:
-              responses: {}
-          /replaceExistingImageEntirely:
-            put:
-              responses: {}
-          /modifyExistingImage:
-            patch:
-              responses: {}
       FailOnWarnings: true
   thumbnailProcessor:
     Type: AWS::Serverless::Function
@@ -102,6 +93,40 @@ Resources:
             ApiId: !Ref HttpApi
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
+  downloadProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-downloadProcessor
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: downloadProcessor
+      CodeUri: src/downloadProcessor
+      Handler: handler.handler
+      Runtime: python3.8
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - S3CrudPolicy:
+            BucketName: !Ref uploadedImages
+        - S3CrudPolicy:
+            BucketName: !Ref thumbnailImages
+      Events:
+        HttpApiGETdownloadImage:
+          Type: HttpApi
+          Properties:
+            Path: /downloadImage
+            Method: GET
+            ApiId: !Ref HttpApi
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref uploadedImages
+          BUCKET_ARN: !GetAtt uploadedImages.Arn
+          BUCKET_NAME_2: !Ref thumbnailImages
+          BUCKET_ARN_2: !GetAtt thumbnailImages.Arn
 Parameters:
   StackeryStackTagName:
     Type: String
