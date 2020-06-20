@@ -8,23 +8,36 @@ Resources:
       BucketName: !Sub ${AWS::StackName}-uploadedimages
     Metadata:
       StackeryName: Uploaded Images
-  imageProcessor:
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefinitionBody:
+        openapi: '3.0'
+        info:
+          title: !Sub ${AWS::StackName}-HttpApi
+          version: '1.0'
+        paths:
+          /uploadImage:
+            post:
+              responses: {}
+      FailOnWarnings: true
+  thumbnailProcessor:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-imageProcessor
+      FunctionName: !Sub ${AWS::StackName}-thumbnailProcessor
       Description: !Sub
         - Stackery Stack ${StackeryStackTagName} Environment ${StackeryEnvironmentTagName} Function ${ResourceName}
-        - ResourceName: imageProcessor
-      CodeUri: src/imageProcessor
+        - ResourceName: thumbnailProcessor
+      CodeUri: src/thumbnailProcessor
       Handler: handler.handler
-      Runtime: python3.7
+      Runtime: python3.8
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
         - S3CrudPolicy:
-            BucketName: !Ref processedImages
+            BucketName: !Ref thumbnailImages
         - S3CrudPolicy:
             BucketName: !Sub ${AWS::StackName}-uploadedimages
       Events:
@@ -37,20 +50,56 @@ Resources:
               - s3:ObjectRemoved:*
       Environment:
         Variables:
-          BUCKET_NAME: !Ref processedImages
-          BUCKET_ARN: !GetAtt processedImages.Arn
+          BUCKET_NAME: !Ref thumbnailImages
+          BUCKET_ARN: !GetAtt thumbnailImages.Arn
     Metadata:
       StackeryName: imageProcessor
-  processedImages:
+  thumbnailImages:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${AWS::StackName}-processedimages
+      BucketName: !Sub ${AWS::StackName}-thumbnailimages
     Metadata:
       StackeryName: Processed Images
+  uploadProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-uploadProcessor
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: uploadProcessor
+      CodeUri: src/upload
+      Handler: handler.handler
+      Runtime: python3.8
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - S3CrudPolicy:
+            BucketName: !Ref uploadedImages
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref uploadedImages
+          BUCKET_ARN: !GetAtt uploadedImages.Arn
+      Events:
+        HttpApiPOSTuploadImage:
+          Type: HttpApi
+          Properties:
+            Path: /uploadImage
+            Method: POST
+            ApiId: !Ref HttpApi
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
 Parameters:
   StackeryStackTagName:
     Type: String
     Description: Stack Name (injected by Stackery at deployment time)
   StackeryEnvironmentTagName:
+    Type: String
+    Description: Environment Name (injected by Stackery at deployment time)
+  StackTagName:
+    Type: String
+    Description: Stack Name (injected by Stackery at deployment time)
+  EnvironmentTagName:
     Type: String
     Description: Environment Name (injected by Stackery at deployment time)
