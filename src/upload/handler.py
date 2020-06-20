@@ -1,3 +1,5 @@
+import boto3
+import botocore
 import json
 import base64
 import hashlib
@@ -16,7 +18,7 @@ def handler(event, context):
             imagePath = "/tmp/" + imageName
             with open(imagePath, "wb") as fh:
                 fh.write(base64.decodebytes(img_data))
-            
+            s3 = boto3.resource('s3')
             print("Storing thumbnail %s to ObjectStore 'Uploaded Image'" % imagePath)
             targetBucket = os.environ['BUCKET_NAME']
             try:
