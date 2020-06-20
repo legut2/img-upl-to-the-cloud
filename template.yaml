@@ -20,6 +20,18 @@ Resources:
           /uploadImage:
             post:
               responses: {}
+          /downloadImage:
+            get:
+              responses: {}
+          /deleteImage:
+            delete:
+              responses: {}
+          /replaceExistingImageEntirely:
+            put:
+              responses: {}
+          /modifyExistingImage:
+            patch:
+              responses: {}
       FailOnWarnings: true
   thumbnailProcessor:
     Type: AWS::Serverless::Function
