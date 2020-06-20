@@ -8,5 +8,5 @@ def handler(event, context):
             return "You uploaded a base64encoded thing to this function"
         else:
             return "You didn't base64encode anything to this funciton"
-    catch:
+    except KeyError:
         return "Something went terribly wrong."
