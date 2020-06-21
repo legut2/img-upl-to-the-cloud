@@ -18,7 +18,7 @@ def handler(event, context):
         if event['isBase64Encoded']:
             b64_form_data = event['body'].encode()
             form_data = base64.decodebytes(b64_form_data)
-            msg = email.parser.BytesParser().parsebytes(my_multipart_data)
+            msg = email.parser.BytesParser().parsebytes(form_data)
 
             print({
                 part.get_param('name', header='content-disposition'): part.get_payload(decode=True)
