@@ -18,12 +18,11 @@ def handler(event, context):
         if event['isBase64Encoded']:
             b64_form_data = event['body'].encode()
             form_data = base64.decodebytes(b64_form_data)
-            msg = email.parser.BytesParser().parsebytes(form_data)
-
-            print({
-                part.get_param('name', header='content-disposition'): part.get_payload(decode=True)
-                for part in msg.get_payload()
-            })
+            msg = email.parser.BytesParser().parsebytes(form_data, headersonly=False)
+            d = {}
+            for part in msg.get_payload:
+                d[part.get_param('name', header='content-disposition')] = part.get_payload(decode=True)
+            print(d)
             return str(form_data)
             m = hashlib.md5()
             m.update(img_data)
