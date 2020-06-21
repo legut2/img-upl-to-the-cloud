@@ -22,7 +22,7 @@ def handler(event, context):
             
             for part in msg.get_payload():
                 print("\n")
-                print(email.message_from_bytes(part))
+                print(email.message_from_string(part))
                 print("\n")
             
             return str(form_data)
