@@ -20,7 +20,7 @@ def handler(event, context):
             # form_data = base64.decodebytes(b64_form_data)
             body = event["body"]
 
-            content_type = event["headers"]["Content-Type"]
+            content_type = event["headers"]["content-type"]
 
             body_dec = base64.b64decode(body)
 
