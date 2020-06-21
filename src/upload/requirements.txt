@@ -1,4 +1,4 @@
 boto3
 Pillow
 numpy
-requests
+requests-toolbelt
