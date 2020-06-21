@@ -53,5 +53,5 @@ def handler(event, context):
             return "You uploaded a base64encoded thing to this function and wrote a jpeg but never checked to make sure it was a jpeg then tried to upload it to s3 bucket"
         else:
             return "You didn't base64encode anything to this funciton"
-    except KeyError:
-        return "Something went terribly wrong."
+    except KeyError as e:
+        return "Something went terribly wrong." + str(e)
