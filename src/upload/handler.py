@@ -55,19 +55,19 @@ def handler(event, context):
                 print("Error uploading %s to bucket %s" % (imageName, targetBucket))
                 raise
             return {
-            "status": "success",
-            "statusCode": "200",
-            "body": {
-                "message": "Uploaded to s3."
+                "status": "success",
+                "statusCode": "200",
+                "body": {
+                    "message": "Uploaded to s3."
+                }
             }
-        }
         else:
             return {
-            "status": "error",
-            "statusCode": "400",
-            "body": {
-                "error": {
-                    "message": ""
+                "status": "error",
+                "statusCode": "400",
+                "body": {
+                    "error": {
+                        "message": ""
                 }
             }
         }
