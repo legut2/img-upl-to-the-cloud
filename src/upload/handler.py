@@ -4,6 +4,11 @@ import json
 import base64
 import hashlib
 import os
+import email.parser
+
+
+
+
 
 def handler(event, context):
     # Log the event argument for debugging and for use in local development.
@@ -13,6 +18,12 @@ def handler(event, context):
         if event['isBase64Encoded']:
             b64_form_data = event['body'].encode()
             form_data = base64.decodebytes(b64_form_data)
+            msg = email.parser.BytesParser().parsebytes(my_multipart_data)
+
+            print({
+                part.get_param('name', header='content-disposition'): part.get_payload(decode=True)
+                for part in msg.get_payload()
+            })
             return str(form_data)
             m = hashlib.md5()
             m.update(img_data)
