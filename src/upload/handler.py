@@ -9,6 +9,7 @@ import cgi, cgitb
 import numpy as np
 from PIL import Image
 from requests_toolbelt.multipart import decoder
+import io
 
 def handler(event, context):
     # Log the event argument for debugging and for use in local development.
