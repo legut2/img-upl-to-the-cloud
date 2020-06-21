@@ -20,7 +20,7 @@ def handler(event, context):
             form_data = base64.decodebytes(b64_form_data)
             msg = email.parser.BytesParser().parsebytes(form_data, headersonly=False)
             d = {}
-            for part in msg.get_payload:
+            for part in msg.get_payload():
                 d[part.get_param('name', header='content-disposition')] = part.get_payload(decode=True)
             print(d)
             return str(form_data)
