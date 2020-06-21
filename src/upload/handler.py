@@ -59,7 +59,7 @@ def handler(event, context):
             }
         }
         else:
-            return return {
+            return {
             "status": "error",
             "statusCode": "400",
             "body": {
