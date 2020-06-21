@@ -51,8 +51,30 @@ def handler(event, context):
             except botocore.exceptions.ClientError as e:
                 print("Error uploading %s to bucket %s" % (imageName, targetBucket))
                 raise
-            return "You uploaded a base64encoded thing to this function and wrote a jpeg but never checked to make sure it was a jpeg then tried to upload it to s3 bucket"
+            return {
+            "status": "success",
+            "statusCode": "200",
+            "body": {
+                "message": "Uploaded to s3."
+            }
+        }
         else:
-            return "You didn't base64encode anything to this funciton"
+            return return {
+            "status": "error",
+            "statusCode": "400",
+            "body": {
+                "error": {
+                    "message": ""
+                }
+            }
+        }
     except KeyError as e:
-        return "Something went terribly wrong." + str(e)
+        return {
+            "status": "error",
+            "statusCode": "400",
+            "body": {
+                "error": {
+                    "message": str(e)
+                }
+            }
+        }
