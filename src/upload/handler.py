@@ -11,14 +11,16 @@ def handler(event, context):
 
     try:
         if event['isBase64Encoded']:
-            img_data = event['body'].encode()
+            b64_form_data = event['body'].encode()
+            form_data = base64.decodebytes(b64_form_data)
+            return str(form_data)
             m = hashlib.md5()
             m.update(img_data)
             imageName = m.hexdigest() + ".jpg"
             imagePath = "/tmp/" + imageName
             with open(imagePath, "wb") as fh:
                 fh.write(base64.decodebytes(img_data))
-                
+
             s3 = boto3.resource('s3')
             print("Storing thumbnail %s to ObjectStore 'Uploaded Image'" % imagePath)
             targetBucket = os.environ['BUCKET_NAME']
