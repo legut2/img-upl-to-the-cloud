@@ -18,7 +18,7 @@ def handler(event, context):
             imagePath = "/tmp/" + imageName
             with open(imagePath, "wb") as fh:
                 fh.write(base64.decodebytes(img_data))
-            print("file closed: " + str(fh.closed()))
+                
             s3 = boto3.resource('s3')
             print("Storing thumbnail %s to ObjectStore 'Uploaded Image'" % imagePath)
             targetBucket = os.environ['BUCKET_NAME']
