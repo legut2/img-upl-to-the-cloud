@@ -21,7 +21,9 @@ def handler(event, context):
             msg = email.parser.BytesParser().parsebytes(form_data, headersonly=False)
             
             for part in msg.get_payload():
+                print("\n")
                 print(part)
+                print("\n")
             
             return str(form_data)
             m = hashlib.md5()
