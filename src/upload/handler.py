@@ -5,9 +5,9 @@ import base64
 import hashlib
 import os
 import email.parser
-
-
-
+import cgi, cgitb
+import numpy as np
+from PIL import Image
 
 
 def handler(event, context):
@@ -16,23 +16,32 @@ def handler(event, context):
 
     try:
         if event['isBase64Encoded']:
-            b64_form_data = event['body'].encode()
-            form_data = base64.decodebytes(b64_form_data)
-            msg = email.parser.BytesParser().parsebytes(form_data, headersonly=False)
-            
-            for part in msg.get_payload():
-                print("\n")
-                print(email.message_from_string(part))
-                print("\n")
-            
-            return str(form_data)
+            # b64_form_data = event['body'].encode()
+            # form_data = base64.decodebytes(b64_form_data)
+            # body = event["body"]
+
+            content_type = event["headers"]["Content-Type"]
+
+            body_dec = base64.b64decode(body)
+
+            multipart_data = decoder.MultipartDecoder(body_dec, content_type)
+
+            binary_content = []
+
+            for part in multipart_data.parts:
+                binary_content.append(part.content)
+
+            imageStream = io.BytesIO(binary_content[0])
+            imageFile = Image.open(imageStream)
+            imageArray = np.array(imageFile)
+            # Create new image from the Numpy array and save
+            result = Image.fromarray(imageArray)
+            # return str(form_data)
             m = hashlib.md5()
             m.update(img_data)
             imageName = m.hexdigest() + ".jpg"
             imagePath = "/tmp/" + imageName
-            with open(imagePath, "wb") as fh:
-                fh.write(base64.decodebytes(img_data))
-
+            result.save(imagePath)
             s3 = boto3.resource('s3')
             print("Storing thumbnail %s to ObjectStore 'Uploaded Image'" % imagePath)
             targetBucket = os.environ['BUCKET_NAME']
