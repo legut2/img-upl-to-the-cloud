@@ -38,7 +38,7 @@ def handler(event, context):
             result = Image.fromarray(imageArray)
             # return str(form_data)
             m = hashlib.md5()
-            m.update(img_data)
+            # m.update(img_data)
             imageName = m.hexdigest() + ".jpg"
             imagePath = "/tmp/" + imageName
             result.save(imagePath)
