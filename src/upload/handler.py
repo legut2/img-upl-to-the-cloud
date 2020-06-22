@@ -32,6 +32,7 @@ def handler(event, context):
 
             imageStream = io.BytesIO(binary_content[0])
             imageFile = Image.open(imageStream)
+            print(imageFile.format)
             imageArray = np.array(imageFile)
 
             # Create new image from the Numpy array and save to sanitize the image to help prevent something malicious as payload
