@@ -20,9 +20,6 @@ Resources:
           /uploadImage:
             post:
               responses: {}
-          /downloadImage:
-            get:
-              responses: {}
       FailOnWarnings: true
   thumbnailProcessor:
     Type: AWS::Serverless::Function
