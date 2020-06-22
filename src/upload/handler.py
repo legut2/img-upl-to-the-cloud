@@ -68,9 +68,9 @@ def handler(event, context):
                 "body": {
                     "error": {
                         "message": ""
+                    }
                 }
             }
-        }
     except KeyError as e:
         return {
             "status": "error",
