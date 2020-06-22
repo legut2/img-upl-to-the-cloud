@@ -16,7 +16,7 @@ def handler(message, context):
     imageName = record['s3']['object']['key']
 
     # Only operate on JPG files
-    if (not re.match(r'.*\.jpg$', imageName)):
+    if (not re.match(r'.*\.jpg$', imageName) and not re.match(r'.*\.jpeg$', imageName) and not re.match(r'.*\.png$', imageName)):
         return {}
 
     s3 = boto3.resource('s3')
