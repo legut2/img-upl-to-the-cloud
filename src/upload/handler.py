@@ -32,7 +32,7 @@ def handler(event, context):
 
             imageStream = io.BytesIO(binary_content[0])
             imageFile = Image.open(imageStream)
-            print(imageFile.format)
+            file_format = imageFile.format
             imageArray = np.array(imageFile)
 
             # Create new image from the Numpy array and save to sanitize the image to help prevent something malicious as payload
@@ -42,7 +42,7 @@ def handler(event, context):
 
             # m.update(img_data) # Make hash specific to image
 
-            imageName = m.hexdigest() + ".jpg" # image name is now hash + jpg
+            imageName = m.hexdigest() + "." + lower(file_format) # image name is now hash + jpg
             imagePath = "/tmp/" + imageName # tmp is one of the few places where you can write a file, keep in mind container reuse is possible with lambdas.
             result.save(imagePath)
 
