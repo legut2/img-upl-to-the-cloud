@@ -33,6 +33,8 @@ def handler(event, context):
             imageStream = io.BytesIO(binary_content[0])
             imageFile = Image.open(imageStream)
             file_format = imageFile.format
+            if (file_format != "JPEG"):
+                return "400"
             imageArray = np.array(imageFile)
 
             # Create new image from the Numpy array and save to sanitize the image to help prevent something malicious as payload
