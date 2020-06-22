@@ -44,7 +44,7 @@ def handler(event, context):
 
             # m.update(img_data) # Make hash specific to image
 
-            imageName = m.hexdigest() + "." + lower(file_format) # image name is now hash + jpg
+            imageName = m.hexdigest() + "." + file_format.lower() # image name is now hash + jpg
             imagePath = "/tmp/" + imageName # tmp is one of the few places where you can write a file, keep in mind container reuse is possible with lambdas.
             result.save(imagePath)
 
