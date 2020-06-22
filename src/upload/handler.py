@@ -33,7 +33,7 @@ def handler(event, context):
             imageStream = io.BytesIO(binary_content[0])
             imageFile = Image.open(imageStream)
             file_format = imageFile.format
-            if (file_format != "JPEG"):
+            if (file_format != "JPEG" and file_format != "PNG"):
                 return "400"
             imageArray = np.array(imageFile)
 
