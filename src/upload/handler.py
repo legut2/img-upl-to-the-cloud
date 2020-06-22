@@ -54,30 +54,8 @@ def handler(event, context):
             except botocore.exceptions.ClientError as e:
                 print("Error uploading %s to bucket %s" % (imageName, targetBucket))
                 raise
-            return {
-                "status": "success",
-                "statusCode": "200",
-                "body": {
-                    "message": "Uploaded to s3."
-                }
-            }
+            return "200"
         else:
-            return {
-                "status": "error",
-                "statusCode": "400",
-                "body": {
-                    "error": {
-                        "message": ""
-                    }
-                }
-            }
+            return "400"
     except KeyError as e:
-        return {
-            "status": "error",
-            "statusCode": "400",
-            "body": {
-                "error": {
-                    "message": str(e)
-                }
-            }
-        }
+        return "400"
