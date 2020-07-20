@@ -27,14 +27,14 @@ def handler(event, context):
             #multipart forms are very common due to html forms
             multipart_data = decoder.MultipartDecoder(body_dec, content_type)
             binary_content = []
-            int index = 0
+            indexVar = 0
             # lenParts = len(multipart_data.parts)
             
             for part in multipart_data.parts:
                 
                 binary_content.append(part.content)
 
-                imageStream = io.BytesIO(binary_content[index])
+                imageStream = io.BytesIO(binary_content[indexVar])
                 imageFile = Image.open(imageStream)
                 file_format = imageFile.format
                 if (file_format != "JPEG" and file_format != "PNG"):
@@ -52,7 +52,7 @@ def handler(event, context):
                 imagePath = "/tmp/" + imageName # tmp is one of the few places where you can write a file, keep in mind container reuse is possible with lambdas.
                 result.save(imagePath)
 
-                index = index + 1
+                indexVar = indexVar + 1
 
                 # Upload to s3 bucket finally that is in env variable
                 s3 = boto3.resource('s3')
