@@ -15,7 +15,7 @@ def handler(message, context):
     sourceBucket = record['s3']['bucket']['name']
     imageName = record['s3']['object']['key']
 
-    # Only operate on JPG files
+    # Only operate on JPG/JPEG/PNG files
     if (not re.match(r'.*\.jpg$', imageName) and not re.match(r'.*\.jpeg$', imageName) and not re.match(r'.*\.png$', imageName)):
         return {}
 
@@ -33,7 +33,7 @@ def handler(message, context):
 
 
     print("Creating thumbnail from image")
-    thumbnailImage = "200x200-%s" % imageName
+    thumbnailImage = "thumb.%s" % imageName
     thumbnailPath = "/tmp/%s" % thumbnailImage
     size = 200, 200
 
