@@ -33,7 +33,7 @@ def handler(message, context):
 
 
     print("Creating thumbnail from image")
-    thumbnailImage = "thumb.%s" % imageName
+    thumbnailImage = "thumb.%s" % imageName[5:len(imageName)]
     thumbnailPath = "/tmp/%s" % thumbnailImage
     size = 200, 200
 
