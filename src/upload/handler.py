@@ -36,10 +36,11 @@ def handler(event, context):
                 if (part.headers['Content-Type'] == 'image/jpeg' or part.headers['Content-Type'] == 'image/png'):
                     imageStream = io.BytesIO(binary_content[indexVar])
                     print(indexVar)
-                    # print(part.headers['Content-Type'])
+                    print(part.headers['Content-Type'])
                     imageFile = Image.open(imageStream)
                     file_format = imageFile.format
                     if (file_format != "JPEG" and file_format != "PNG"):
+                        print("not png or jpeq filetype")
                         return "400"
                     imageArray = np.array(imageFile)
 
@@ -65,8 +66,10 @@ def handler(event, context):
                     except botocore.exceptions.ClientError as e:
                         print("Error uploading %s to bucket %s" % (imageName, targetBucket))
                         raise
+
             return "200"
         else:
+            print("not base64 encoded")
             return "400"
     except KeyError as e:
         return "400"
