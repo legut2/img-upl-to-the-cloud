@@ -34,38 +34,40 @@ def handler(event, context):
                 
                 binary_content.append(part.content)
                 # if (part.headers['Content-Type'] == 'image/jpeg' or part.headers['Content-Type'] == 'image/png'):
-                imageStream = io.BytesIO(binary_content[indexVar])
-                print(indexVar)
-                print(part.headers)
-                imageFile = Image.open(imageStream)
-                file_format = imageFile.format
-                if (file_format != "JPEG" and file_format != "PNG"):
-                    print("not png or jpeq filetype")
-                    return "400"
-                imageArray = np.array(imageFile)
+                if (part.headers.get(b'Content-Type')!=None):
+                    if (part.headers.get(b'Content-Type')==b'image/jpeg' or part.headers.get(b'Content-Type')==b'image/png')
+                        imageStream = io.BytesIO(binary_content[indexVar])
+                        print(indexVar)
+                        print(part.headers)
+                        imageFile = Image.open(imageStream)
+                        file_format = imageFile.format
+                        if (file_format != "JPEG" and file_format != "PNG"):
+                            print("not png or jpeq filetype")
+                            return "400"
+                        imageArray = np.array(imageFile)
 
-                # Create new image from the Numpy array and save to sanitize the image to help prevent something malicious as payload
-                result = Image.fromarray(imageArray)
+                        # Create new image from the Numpy array and save to sanitize the image to help prevent something malicious as payload
+                        result = Image.fromarray(imageArray)
 
-                m = hashlib.md5()
+                        m = hashlib.md5()
 
-                m.update(imageFile.tobytes()) # Make hash specific to image
+                        m.update(imageFile.tobytes()) # Make hash specific to image
 
-                imageName = "full." + m.hexdigest() + "." + file_format.lower() # image name is now hash + jpg
-                imagePath = "/tmp/" + imageName # tmp is one of the few places where you can write a file, keep in mind container reuse is possible with lambdas.
-                result.save(imagePath)
+                        imageName = "full." + m.hexdigest() + "." + file_format.lower() # image name is now hash + jpg
+                        imagePath = "/tmp/" + imageName # tmp is one of the few places where you can write a file, keep in mind container reuse is possible with lambdas.
+                        result.save(imagePath)
 
-                indexVar = indexVar + 1
+                        indexVar = indexVar + 1
 
-                # Upload to s3 bucket finally that is in env variable
-                s3 = boto3.resource('s3')
-                print("Storing full image %s to ObjectStore 'Uploaded Image'" % imagePath)
-                targetBucket = os.environ['BUCKET_NAME']
-                try:
-                    s3.Bucket(targetBucket).upload_file(imagePath, imageName)
-                except botocore.exceptions.ClientError as e:
-                    print("Error uploading %s to bucket %s" % (imageName, targetBucket))
-                    raise
+                        # Upload to s3 bucket finally that is in env variable
+                        s3 = boto3.resource('s3')
+                        print("Storing full image %s to ObjectStore 'Uploaded Image'" % imagePath)
+                        targetBucket = os.environ['BUCKET_NAME']
+                        try:
+                            s3.Bucket(targetBucket).upload_file(imagePath, imageName)
+                        except botocore.exceptions.ClientError as e:
+                            print("Error uploading %s to bucket %s" % (imageName, targetBucket))
+                            raise
 
             return "200"
         else:
