@@ -35,7 +35,7 @@ def handler(event, context):
                 binary_content.append(part.content)
                 # if (part.headers['Content-Type'] == 'image/jpeg' or part.headers['Content-Type'] == 'image/png'):
                 if (part.headers.get(b'Content-Type')!=None):
-                    if (part.headers.get(b'Content-Type')==b'image/jpeg' or part.headers.get(b'Content-Type')==b'image/png')
+                    if (part.headers.get(b'Content-Type')==b'image/jpeg' or part.headers.get(b'Content-Type')==b'image/png'):
                         imageStream = io.BytesIO(binary_content[indexVar])
                         print(indexVar)
                         print(part.headers)
