@@ -33,7 +33,7 @@ def handler(event, context):
             for part in multipart_data.parts:
                 
                 binary_content.append(part.content)
-                if (part.headers['Content-Type'] == 'image/jpeg' or part.headers['Content-Type'] == 'image/png')
+                if (part.headers['Content-Type'] == 'image/jpeg' or part.headers['Content-Type'] == 'image/png'):
                     imageStream = io.BytesIO(binary_content[indexVar])
                     print(indexVar)
                     # print(part.headers['Content-Type'])
