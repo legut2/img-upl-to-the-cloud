@@ -36,7 +36,7 @@ def handler(event, context):
                 # if (part.headers['Content-Type'] == 'image/jpeg' or part.headers['Content-Type'] == 'image/png'):
                 imageStream = io.BytesIO(binary_content[indexVar])
                 print(indexVar)
-                # print(part.headers['Content-Type'])
+                print(part.headers)
                 imageFile = Image.open(imageStream)
                 file_format = imageFile.format
                 if (file_format != "JPEG" and file_format != "PNG"):
